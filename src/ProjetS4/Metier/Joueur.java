@@ -21,7 +21,7 @@ public class Joueur {
     }
 
     public String getCouleur(){
-        return couleur;
+        return this.couleur;
     }
 
     public int getNbPion(){
@@ -42,18 +42,18 @@ public class Joueur {
 
     public int getPoint(int id) {
         recupererPoint(id);
-        return point;
+        return this.point;
     }
 
     public int getNbTl(){
-        return nbTl;
+        return this.nbTl;
     }
 
     public void retirerTl(){
-        nbTl--;
+        this.nbTl--;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 }

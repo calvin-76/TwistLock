@@ -1,16 +1,11 @@
 package ProjetS4.Metier;
 
-import ProjetS4.Controleur;
-
 public class Conteneur {
     private int valeur;
-    private int idJoueur;
     private Coin[] coins;
-    private Controleur ctrl;
 
-    public Conteneur(Controleur ctrl, int valeur){
+    public Conteneur(int valeur){
         this.coins = new Coin[4];
-        this.ctrl = ctrl;
         this.valeur = valeur;
     }
 
@@ -20,10 +15,10 @@ public class Conteneur {
 
     public int getAppartenir(){
 
-         int joueur1 = 0;
-         int joueur2 = 0;
-         int joueur3 = 0;
-         int joueur4 = 0;
+        int joueur1 = 0;
+        int joueur2 = 0;
+        int joueur3 = 0;
+        int joueur4 = 0;
         for(int i = 0; i<4; i++){
 
             if( coins[i].isVerouille()) {
@@ -50,11 +45,7 @@ public class Conteneur {
         return  this.coins[id - 1];
     }
 
-    public int getIdJoueur() {
-        return idJoueur;
-    }
-
     public int getValeur() {
-        return valeur;
+        return this.valeur;
     }
 }

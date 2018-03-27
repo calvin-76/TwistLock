@@ -128,15 +128,13 @@ public class IHM extends JFrame implements ActionListener{
         /*------------------------------------------------------------*/
 
         /*--------------------  Panel droit  ------------------------*/
-        panelJoueur = new ArrayList<PanelJoueur>();
+        panelJoueur = new ArrayList<>();
 
         JPanel panelDroit = new JPanel(new GridLayout(ctrl.getListJoueur().size(),1));
         for(int i =1; i <= ctrl.getListJoueur().size(); i++) {
             panelJoueur.add(new PanelJoueur(ctrl, i));
             panelDroit.add(panelJoueur.get(i-1));
         }
-
-
         /*-----------------------------------------------------------*/
         quiJoue = new JLabel("C'est au joueur " + ctrl.getListJoueur().get(ctrl.getNum_joueur() - 1).getCouleur() + " de jouer !");
         panelNord.add(quiJoue);
@@ -227,7 +225,7 @@ public class IHM extends JFrame implements ActionListener{
         } else {
             valider.setEnabled(false);
             renouvelleJoueur();
-            message.setText("Partie finis ");
+            message.setText("Partie terminée !");
             this.repaint();
             this.revalidate();
         }
@@ -235,7 +233,7 @@ public class IHM extends JFrame implements ActionListener{
 
     private void renouvelleJoueur() {
         for (int i = 1; i <= ctrl.getListJoueur().size(); i++) {
-           panelJoueur.get(i - 1).renouvelle();
+            panelJoueur.get(i - 1).renouvelle();
         }
     }
 

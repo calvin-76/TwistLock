@@ -10,13 +10,14 @@ public class PanelJoueur extends JPanel {
     private Controleur ctrl;
     private int id;
     private JLabel nbTl;
+
     public PanelJoueur(Controleur ctrl, int id){
         this.ctrl = ctrl;
         this.id = id;
         setLayout(new BorderLayout());
         nbTl = new JLabel("Nombre de Twist Lock : " + this.ctrl.getListJoueur().get(id-1).getNbTl());
         JLabel nom = new JLabel("Joueur " + this.ctrl.getListJoueur().get(id-1).getCouleur());
-        point = new JLabel("point : "+this.ctrl.getListJoueur().get(id - 1).getPoint(id));
+        point = new JLabel("Nombre de points : "+this.ctrl.getListJoueur().get(id - 1).getPoint(id));
 
         JPanel panelNom = new JPanel(new BorderLayout());
         JPanel panelNbTl = new JPanel(new BorderLayout());
@@ -35,7 +36,7 @@ public class PanelJoueur extends JPanel {
     }
 
     public void renouvelle(){
-        point.setText("point : "+ ctrl.getListJoueur().get(0).getPoint(id));
+        point.setText("Nombre de points : "+ ctrl.getListJoueur().get(0).getPoint(id));
         nbTl.setText("Nombre de Twist Lock : " + ctrl.getListJoueur().get(id-1).getNbTl());
     }
 }

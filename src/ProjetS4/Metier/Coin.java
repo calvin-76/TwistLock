@@ -1,23 +1,19 @@
 package ProjetS4.Metier;
 
-import ProjetS4.Controleur;
-
 public class Coin {
     private boolean verouille;
     private Joueur joueur;
-    private Controleur ctrl;
 
     public boolean isVerouille(){
         return this.verouille;
     }
 
-    public Coin(Controleur ctrl){
-        this.ctrl = ctrl;
+    public Coin(){
         this.verouille = false;
     }
 
     public Joueur getJoueur() {
-        return joueur;
+        return this.joueur;
     }
 
     public void setJoueur(Joueur joueur){
@@ -29,7 +25,7 @@ public class Coin {
     }
 
     private void setVerouille(){
-        verouille = true;
+        this.verouille = true;
     }
 
 }

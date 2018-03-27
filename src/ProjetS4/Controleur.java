@@ -11,14 +11,13 @@ public class Controleur {
     private int num_joueur = 1;
 
     private ArrayList<Joueur> listJoueur;
-    private Coin[][] listCoin;
     private Conteneur[][] tablier;
 
     private int lignes;
     private int colonnes;
 
-    public Controleur(int nbJoueur){
-        this.listJoueur = new ArrayList<Joueur>();
+    private Controleur(int nbJoueur){
+        this.listJoueur = new ArrayList<>();
         creerListJoueur(nbJoueur);
         creerListConteneur();
 
@@ -35,18 +34,18 @@ public class Controleur {
         this.lignes = (int)(Math.random() * 6 + 4);
         this.colonnes = (int)(Math.random() * 6 + 4);
 
-        this.listCoin = new Coin[lignes + 1][colonnes + 1];
+        Coin[][] listCoin = new Coin[lignes + 1][colonnes + 1];
 
         for(int lig = 0 ; lig<lignes + 1; lig++) {
             for (int col = 0; col < colonnes + 1; col++) {
-                listCoin[lig][col] = new Coin(this);;
+                listCoin[lig][col] = new Coin();
             }
         }
         this.tablier = new Conteneur[lignes][colonnes];
 
         for(int lig = 0 ; lig<lignes; lig++){
             for (int col = 0; col < colonnes; col++){
-                Conteneur tmpConteneur = new Conteneur(this,(int)(Math.random()*50+5));
+                Conteneur tmpConteneur = new Conteneur((int)(Math.random()*50+5));
                 tablier[lig][col] = tmpConteneur;
                 tablier[lig][col].setCoin(listCoin[lig][col],1);
                 tablier[lig][col].setCoin(listCoin[lig][col + 1],2);
@@ -63,22 +62,23 @@ public class Controleur {
         return true;
     }
 
+    /*
     public String estGagnant() {
-        String message = "";
-        if(partieFinis()){
-            int scoreGagnant = 0;
-            String couleurGagnant = "";
-            for(int i=0; i<listJoueur.size();i++) {
-                if (scoreGagnant < listJoueur.get(i).getPoint(i)) {
-                    scoreGagnant =  listJoueur.get(i).getPoint(i);
-                    couleurGagnant =  listJoueur.get(i).getCouleur();
-                }
-            }
-            message = couleurGagnant + " a gagne la partie avec " + scoreGagnant + " points";
-            return  message;
-        }
-        return  message;
-    }
+    String message = "";
+    if(partieFinis()){
+    int scoreGagnant = 0;
+    String couleurGagnant = "";
+    for(int i=0; i<listJoueur.size();i++) {
+    if (scoreGagnant < listJoueur.get(i).getPoint(i)) {
+    scoreGagnant =  listJoueur.get(i).getPoint(i);
+    couleurGagnant =  listJoueur.get(i).getCouleur();
+}
+}
+message = couleurGagnant + " a gagne la partie avec " + scoreGagnant + " points";
+return  message;
+}
+return  message;
+}*/
 
     public void passerTour() {
         if (num_joueur >= listJoueur.size())
@@ -114,11 +114,7 @@ public class Controleur {
         return  this.colonnes;
     }
 
-    public ArrayList<Joueur> getlistJoueur(){
-        return  this.listJoueur;
-    }
-
     public static void main(String[] args){
-        new Controleur(4);
+        new Controleur(2);
     }
 }
