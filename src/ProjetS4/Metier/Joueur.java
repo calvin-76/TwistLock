@@ -3,7 +3,7 @@ package ProjetS4.Metier;
 import ProjetS4.Controleur;
 
 public class Joueur {
-    private int nbTl = 5;
+    private int nbTl = 20;
     private int point = 0;
     private int id;
     private Controleur ctrl;
