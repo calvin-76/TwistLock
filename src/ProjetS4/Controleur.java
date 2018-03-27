@@ -37,8 +37,8 @@ public class Controleur {
 
         this.listCoin = new Coin[lignes + 1][colonnes + 1];
 
-        for(int lig = 0 ; lig<lignes; lig++) {
-            for (int col = 0; col < colonnes; col++) {
+        for(int lig = 0 ; lig<lignes + 1; lig++) {
+            for (int col = 0; col < colonnes + 1; col++) {
                 listCoin[lig][col] = new Coin(this);;
             }
         }

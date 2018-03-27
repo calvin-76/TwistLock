@@ -178,35 +178,35 @@ public class IHM extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
                 int joueurCourant = Controleur.TOUR - 1;
+                try{
+                    if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
+                        int ligne = Integer.parseInt(tfLigneConteneur.getText());
+                        int colonne = Integer.parseInt(tfColonneConteneur.getText());
+                        int numCoin = Integer.parseInt(tfnumCoin.getText());
 
-                if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
-                    int ligne = Integer.parseInt(tfLigneConteneur.getText());
-                    int colonne = Integer.parseInt(tfColonneConteneur.getText());
-                    int numCoin = Integer.parseInt(tfnumCoin.getText());
+                        ctrl.getListJoueur().get(joueurCourant).retirerTl();
 
-                    ctrl.getListJoueur().get(joueurCourant).retirerTl();
+                        if (!ctrl.getTablier()[ligne][colonne].getCoin(numCoin).isVerouille()) {
+                            ctrl.getTablier()[ligne][colonne].getCoin(numCoin).setJoueur(ctrl.getListJoueur().get(joueurCourant));
 
-                    if (!ctrl.getTablier()[ligne][colonne].getCoin(numCoin - 1).isVerouille()) {
-                        ctrl.getTablier()[ligne][colonne].getCoin(numCoin - 1).setJoueur(ctrl.getListJoueur().get(joueurCourant));
+                            String img = "./img/coin" + ctrl.getListJoueur().get(joueurCourant).getCouleur() + ".png";
 
-                        String img = "./img/coin" + ctrl.getListJoueur().get(joueurCourant).getCouleur() + ".png";
-
-                        switch (numCoin) {
-                            case 1:
-                                listCoin[ligne][colonne].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 2:
-                                listCoin[ligne][colonne + 1].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 3:
-                                listCoin[ligne + 1][colonne + 1].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 4:
-                                System.out.println(img);
-                                listCoin[ligne + 1][colonne].setIcon(getImage(img, 80, 55));
-                                break;
+                            switch (numCoin) {
+                                case 1:
+                                    listCoin[ligne][colonne].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 2:
+                                    listCoin[ligne][colonne + 1].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 3:
+                                    listCoin[ligne + 1][colonne + 1].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 4:
+                                    System.out.println(img);
+                                    listCoin[ligne + 1][colonne].setIcon(getImage(img, 80, 55));
+                                    break;
+                            }
                         }
-                    }
 
                     renouvelleJoueur();
                     setAppartientConteneur();
@@ -216,41 +216,42 @@ public class IHM extends JFrame implements ActionListener{
                     ctrl.passerTour();
 
                 }
+                }catch(Exception e1){
+                    message.setText("Saisir le entier");
+                }
 
         }
     }
 
     private void renouvelleJoueur() {
         for (int i = 1; i <= ctrl.getListJoueur().size(); i++) {
-           // panelJoueur.get(i - 1).renouvelle();
+           //panelJoueur.get(i - 1).renouvelle();
         }
     }
 
     private void setAppartientConteneur() {
         for (int lig = 0; lig < ctrl.getLignes(); lig++) {
             for (int col = 0; col < ctrl.getColonnes(); col++) {
-                System.out.println(lig + "  " + col);
-
                 switch (ctrl.getTablier()[lig][col].getAppartenir()) {
+                    case 0 :
+                        listConteneur[lig][col].setBackground(Color.white);
+                        listConteneur[lig][col].setOpaque(false);
+                        break;
                     case 1:
                         listConteneur[lig][col].setBackground(Color.red);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 2:
                         listConteneur[lig][col].setBackground(Color.green);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 3:
                         listConteneur[lig][col].setBackground(Color.blue);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 4:
                         listConteneur[lig][col].setBackground(Color.yellow);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                 }
             }
