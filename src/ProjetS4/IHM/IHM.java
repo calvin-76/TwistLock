@@ -22,6 +22,7 @@ public class IHM extends JFrame implements ActionListener{
     ArrayList<PanelJoueur> panelJoueur;
 
     private JLabel message;
+    private JLabel quiJoue;
 
     private JButton valider;
 
@@ -43,7 +44,6 @@ public class IHM extends JFrame implements ActionListener{
 
         JPanel panelGlobal = new JPanel(new BorderLayout());
         JPanel panelNord = new JPanel(new BorderLayout());
-        JPanel panelDroite = new JPanel(new BorderLayout());
         JPanel panelGauche = new JPanel(new BorderLayout());
         JPanel panelBas = new JPanel(new BorderLayout());
 
@@ -130,18 +130,17 @@ public class IHM extends JFrame implements ActionListener{
         /*--------------------  Panel droit  ------------------------*/
         panelJoueur = new ArrayList<PanelJoueur>();
 
-        JPanel panelGridJoueur = new JPanel(new GridLayout(ctrl.getListJoueur().size(),1));
+        JPanel panelDroit = new JPanel(new GridLayout(ctrl.getListJoueur().size(),1));
         for(int i =1; i <= ctrl.getListJoueur().size(); i++) {
             panelJoueur.add(new PanelJoueur(ctrl, i));
-            panelGridJoueur.add(panelJoueur.get(i-1));
+            panelDroit.add(panelJoueur.get(i-1));
         }
 
 
         /*-----------------------------------------------------------*/
-        panelNord.add(new JLabel("  "));
+        quiJoue = new JLabel("C'est au joueur " + ctrl.getListJoueur().get(ctrl.getNum_joueur() - 1).getCouleur() + " de jouer !");
+        panelNord.add(quiJoue);
         panelBas.add(panelMessageColonneLigne);
-        panelGauche.add(new JLabel("OK"));
-        panelDroite.add(new JLabel("OK"));
 
         JPanel paneltmpFlow = new JPanel();
         paneltmpFlow.add(panelTable);
@@ -152,7 +151,7 @@ public class IHM extends JFrame implements ActionListener{
         panelGlobal.add(panelBas,BorderLayout.SOUTH);
         panelGlobal.add(panelNord,BorderLayout.NORTH);
         panelGlobal.add(panelGauche,BorderLayout.WEST);
-        panelGlobal.add(panelGridJoueur,BorderLayout.EAST);
+        panelGlobal.add(panelDroit,BorderLayout.EAST);
         add(panelGlobal);
 
         addWindowListener(
@@ -176,45 +175,56 @@ public class IHM extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
-                int joueurCourant = Controleur.TOUR - 1;
+        message.setText("");
 
-                if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
-                    int ligne = Integer.parseInt(tfLigneConteneur.getText());
-                    int colonne = Integer.parseInt(tfColonneConteneur.getText());
+        if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
+            int joueurCourant = ctrl.getNum_joueur() - 1;
+
+            if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
+                    int ligne = Integer.parseInt(tfLigneConteneur.getText())-1;
+                    int colonne = (tfColonneConteneur.getText().charAt(0))-65;
                     int numCoin = Integer.parseInt(tfnumCoin.getText());
 
                     ctrl.getListJoueur().get(joueurCourant).retirerTl();
 
-                    if (!ctrl.getTablier()[ligne][colonne].getCoin(numCoin - 1).isVerouille()) {
-                        ctrl.getTablier()[ligne][colonne].getCoin(numCoin - 1).setJoueur(ctrl.getListJoueur().get(joueurCourant));
+                    if(ligne+1<1 || colonne+1<1 || ligne+1 > ctrl.getTablier().length || colonne+1 > ctrl.getTablier()[0].length || numCoin > 4 || numCoin < 1){
+                        ctrl.getListJoueur().get(joueurCourant).retirerTl();
+                        message.setText("Coordonnées incorrect. Vous avez perdu un TL.");
+                    }else{
+                        if (!ctrl.getTablier()[ligne][colonne].getCoin(numCoin).isVerouille()) {
+                            ctrl.getTablier()[ligne][colonne].getCoin(numCoin).setJoueur(ctrl.getListJoueur().get(joueurCourant));
 
-                        String img = "./img/coin" + ctrl.getListJoueur().get(joueurCourant).getCouleur() + ".png";
+                            String img = "./img/coin" + ctrl.getListJoueur().get(joueurCourant).getCouleur() + ".png";
 
-                        switch (numCoin) {
-                            case 1:
-                                listCoin[ligne][colonne].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 2:
-                                listCoin[ligne][colonne + 1].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 3:
-                                listCoin[ligne + 1][colonne + 1].setIcon(getImage(img, 80, 55));
-                                break;
-                            case 4:
-                                System.out.println(img);
-                                listCoin[ligne + 1][colonne].setIcon(getImage(img, 80, 55));
-                                break;
+                            switch (numCoin) {
+                                case 1:
+                                    listCoin[ligne][colonne].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 2:
+                                    listCoin[ligne][colonne + 1].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 3:
+                                    listCoin[ligne + 1][colonne + 1].setIcon(getImage(img, 80, 55));
+                                    break;
+                                case 4:
+                                    listCoin[ligne + 1][colonne].setIcon(getImage(img, 80, 55));
+                                    break;
+                            }
+                        } else {
+                            ctrl.getListJoueur().get(joueurCourant).retirerTl();
+                            message.setText("Coin déja verouillé. Vous avez perdu un TL.");
                         }
+                        renouvelleJoueur();
+                        setAppartientConteneur();
+
+                        this.repaint();
+                        this.revalidate();
+                        ctrl.passerTour();
+
+                        System.out.println(ctrl.getListJoueur().get(ctrl.getNum_joueur()-1).getId());
+                        quiJoue = new JLabel("C'est au joueur " + ctrl.getListJoueur().get(ctrl.getNum_joueur()-1).getCouleur() + " de jouer !");
+
                     }
-
-                    renouvelleJoueur();
-                    setAppartientConteneur();
-
-                    this.repaint();
-                    this.revalidate();
-                    ctrl.passerTour();
-
                 }
 
         }
@@ -222,36 +232,35 @@ public class IHM extends JFrame implements ActionListener{
 
     private void renouvelleJoueur() {
         for (int i = 1; i <= ctrl.getListJoueur().size(); i++) {
-           // panelJoueur.get(i - 1).renouvelle();
+           panelJoueur.get(i - 1).renouvelle();
         }
     }
 
     private void setAppartientConteneur() {
         for (int lig = 0; lig < ctrl.getLignes(); lig++) {
             for (int col = 0; col < ctrl.getColonnes(); col++) {
-                System.out.println(lig + "  " + col);
-
                 switch (ctrl.getTablier()[lig][col].getAppartenir()) {
+                    case 0 :
+                        listConteneur[lig][col].setBackground(Color.white);
+                        listConteneur[lig][col].setOpaque(false);
+                        break;
                     case 1:
                         listConteneur[lig][col].setBackground(Color.red);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 2:
                         listConteneur[lig][col].setBackground(Color.green);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 3:
                         listConteneur[lig][col].setBackground(Color.blue);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
                     case 4:
                         listConteneur[lig][col].setBackground(Color.yellow);
                         listConteneur[lig][col].setOpaque(true);
-
                         break;
+
                 }
             }
         }

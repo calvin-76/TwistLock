@@ -2,13 +2,10 @@ package ProjetS4.Metier;
 
 import ProjetS4.Controleur;
 
-import java.util.ArrayList;
-
 public class Coin {
     private boolean verouille;
     private Joueur joueur;
     private Controleur ctrl;
-    private ArrayList<Conteneur> listconteneur;
 
     public boolean isVerouille(){
         return this.verouille;
@@ -17,11 +14,6 @@ public class Coin {
     public Coin(Controleur ctrl){
         this.ctrl = ctrl;
         this.verouille = false;
-        this.listconteneur = new ArrayList<Conteneur>();
-    }
-
-    public void addconteneur(Conteneur conteneur){
-        this.listconteneur.add(conteneur);
     }
 
     public Joueur getJoueur() {
@@ -34,10 +26,6 @@ public class Coin {
             setVerouille();
         }
 
-    }
-
-    public ArrayList<Conteneur> getConteneur(){
-        return this.listconteneur;
     }
 
     private void setVerouille(){

@@ -24,11 +24,12 @@ public class Conteneur {
     }
 
     public int getAppartenir(){
+
+         int joueur1 = 0;
+         int joueur2 = 0;
+         int joueur3 = 0;
+         int joueur4 = 0;
         for(int i = 0; i<4; i++){
-            int joueur1 = 0;
-            int joueur2 = 0;
-            int joueur3 = 0;
-            int joueur4 = 0;
 
             if( coins[i].isVerouille()) {
                 if (coins[i].getJoueur().getId() == 1) joueur1++;
@@ -37,20 +38,21 @@ public class Conteneur {
                 if (coins[i].getJoueur().getId() == 4) joueur4++;
             }
 
-            if(joueur1>joueur2 && joueur1>joueur3 && joueur1>joueur4 )
-                return 1;
-            if(joueur2>joueur1 && joueur2>joueur3 && joueur2>joueur4 )
-                return 2;
-            if(joueur3>joueur1 && joueur3>joueur2 && joueur3>joueur4 )
-                return 3;
-            if(joueur4>joueur1 && joueur4>joueur2 && joueur4>joueur3 )
-                return 4;
         }
+        if(joueur1>joueur2 && joueur1>joueur3 && joueur1>joueur4 )
+            return 1;
+        if(joueur2>joueur1 && joueur2>joueur3 && joueur2>joueur4 )
+            return  2;
+        if(joueur3>joueur1 && joueur3>joueur2 && joueur3>joueur4 )
+            return  3;
+        if(joueur4>joueur1 && joueur4>joueur2 && joueur4>joueur3 )
+            return  4;
+
         return 0;
     }
 
     public Coin getCoin(int id){
-        return  this.coins[id];
+        return  this.coins[id - 1];
     }
 
     public int getIdJoueur() {

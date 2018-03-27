@@ -8,7 +8,7 @@ import ProjetS4.Metier.Joueur;
 import java.util.ArrayList;
 
 public class Controleur {
-    public static int TOUR = 1;
+    private int num_joueur = 1;
 
     private ArrayList<Joueur> listJoueur;
     private Coin[][] listCoin;
@@ -37,8 +37,8 @@ public class Controleur {
 
         this.listCoin = new Coin[lignes + 1][colonnes + 1];
 
-        for(int lig = 0 ; lig<lignes; lig++) {
-            for (int col = 0; col < colonnes; col++) {
+        for(int lig = 0 ; lig<lignes + 1; lig++) {
+            for (int col = 0; col < colonnes + 1; col++) {
                 listCoin[lig][col] = new Coin(this);;
             }
         }
@@ -57,8 +57,8 @@ public class Controleur {
     }
 
     public void passerTour() {
-        if(TOUR == listJoueur.size() ) TOUR = 1;
-        else TOUR++;
+        if(num_joueur == listJoueur.size() ) num_joueur = 1;
+        else num_joueur++;
     }
 
     public Conteneur[][] getTablier() {
@@ -67,6 +67,10 @@ public class Controleur {
 
     public ArrayList<Joueur> getListJoueur() {
         return listJoueur;
+    }
+
+    public int getNum_joueur(){
+        return this.num_joueur;
     }
 
     public int getLignes(){
