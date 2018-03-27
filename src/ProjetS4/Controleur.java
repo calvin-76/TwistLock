@@ -17,7 +17,7 @@ public class Controleur {
     private int colonnes;
 
     private Controleur(int nbJoueur){
-        this.listJoueur = new ArrayList<>();
+        this.listJoueur = new ArrayList<Joueur>();
         creerListJoueur(nbJoueur);
         creerListConteneur();
 

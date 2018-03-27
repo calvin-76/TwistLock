@@ -19,18 +19,16 @@ public class PanelJoueur extends JPanel {
         JLabel nom = new JLabel("Joueur " + this.ctrl.getListJoueur().get(id-1).getCouleur());
         point = new JLabel("Nombre de points : "+this.ctrl.getListJoueur().get(id - 1).getPoint(id));
 
-        JPanel panelNom = new JPanel(new BorderLayout());
-        JPanel panelNbTl = new JPanel(new BorderLayout());
-        JPanel panelPoint = new JPanel(new BorderLayout());
+        JPanel panelGrid = new JPanel(new GridLayout(3,1));
+        JPanel panelFlow = new JPanel();
 
-        panelNom.add(nom);
-        panelNbTl.add(nbTl);
-        panelPoint.add(point);
+        panelGrid.add(nom);
+        panelGrid.add(nbTl);
+        panelGrid.add(point);
 
-        panelNom.add(panelNbTl, BorderLayout.SOUTH);
-        panelNbTl.add(panelPoint, BorderLayout.SOUTH);
+        panelFlow.add(panelGrid);
 
-        add(panelNom);
+        add(panelFlow);
         add(new JLabel("       "),BorderLayout.WEST);
         add(new JLabel("       "),BorderLayout.EAST);
     }
