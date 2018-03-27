@@ -1,21 +1,28 @@
 package ProjetS4.Metier;
 
 import ProjetS4.Controleur;
+import com.sun.jndi.toolkit.dir.ContextEnumerator;
+
+import java.util.ArrayList;
 
 public class Coin {
     private boolean verouille;
     private Joueur joueur;
     private Controleur ctrl;
-    private Conteneur conteneur;
+    private ArrayList<Conteneur> listconteneur;
 
     public boolean isVerouille(){
         return this.verouille;
     }
 
-    public Coin(Controleur ctrl, Conteneur conteneur){
+    public Coin(Controleur ctrl){
         this.ctrl = ctrl;
-        this.conteneur = conteneur;
         this.verouille = false;
+        this.listconteneur = new ArrayList<Conteneur>();
+    }
+
+    public void addconteneur(Conteneur conteneur){
+        this.listconteneur.add(conteneur);
     }
 
     public Joueur getJoueur() {
@@ -23,18 +30,19 @@ public class Coin {
     }
 
     public void setJoueur(Joueur joueur){
-        if(! this.verouille)
+        if(! this.verouille) {
             this.joueur = joueur;
+            setVerouille();
+        }
+
     }
 
-    public Conteneur getConteneur(){
-        return this.conteneur;
+    public ArrayList<Conteneur> getConteneur(){
+        return this.listconteneur;
     }
 
-    public void setVerouille(){
-        verouille = false;
+    private void setVerouille(){
+        verouille = true;
     }
-
-
 
 }

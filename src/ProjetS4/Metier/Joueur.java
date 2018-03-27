@@ -3,7 +3,7 @@ package ProjetS4.Metier;
 import ProjetS4.Controleur;
 
 public class Joueur {
-    private int nbtl = 20;
+    private int nbTl = 20;
     private int point = 0;
     private int id;
     private Controleur ctrl;
@@ -12,6 +12,12 @@ public class Joueur {
     public Joueur(Controleur ctrl, int id){
         this.ctrl = ctrl;
         this.id = id;
+        switch (id){
+            case 1: this.couleur = "Rouge"; break;
+            case 2: this.couleur = "Vert"; break;
+            case 3: this.couleur = "Bleu";  break;
+            case 4: this.couleur = "Jaune"; break;
+        }
     }
 
     public String getCouleur(){
@@ -19,7 +25,7 @@ public class Joueur {
     }
 
     public int getNbPion(){
-        return this.nbtl;
+        return this.nbTl;
     }
 
     public void recupererPoint(){
@@ -33,6 +39,14 @@ public class Joueur {
 
     public int getPoint() {
         return point;
+    }
+
+    public int getNbTl(){
+        return nbTl;
+    }
+
+    public void retirerTl(){
+        nbTl--;
     }
 
     public int getId() {
