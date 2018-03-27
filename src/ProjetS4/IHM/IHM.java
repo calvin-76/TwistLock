@@ -175,12 +175,13 @@ public class IHM extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) {
-        message.setText("");
+        if(!ctrl.partieFinis()) {
+            message.setText("");
 
-        if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
-            int joueurCourant = ctrl.getNum_joueur() - 1;
+            if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
+                int joueurCourant = ctrl.getNum_joueur() - 1;
 
-            if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
+                if (ctrl.getListJoueur().get(joueurCourant).getNbTl() > 0) {
                     int ligne = Integer.parseInt(tfLigneConteneur.getText())-1;
                     int colonne = (tfColonneConteneur.getText().charAt(0))-65;
                     int numCoin = Integer.parseInt(tfnumCoin.getText());
@@ -214,19 +215,21 @@ public class IHM extends JFrame implements ActionListener{
                             ctrl.getListJoueur().get(joueurCourant).retirerTl();
                             message.setText("Coin déja verouillé. Vous avez perdu un TL.");
                         }
-                        renouvelleJoueur();
                         setAppartientConteneur();
-
-                        this.repaint();
-                        this.revalidate();
-                        ctrl.passerTour();
-
-                        System.out.println(ctrl.getListJoueur().get(ctrl.getNum_joueur()-1).getId());
-                        quiJoue = new JLabel("C'est au joueur " + ctrl.getListJoueur().get(ctrl.getNum_joueur()-1).getCouleur() + " de jouer !");
-
                     }
+                    ctrl.passerTour();
+                    renouvelleJoueur();
+                    quiJoue.setText("C'est au joueur " + ctrl.getListJoueur().get(ctrl.getNum_joueur()-1).getCouleur() + " de jouer !");
+                    this.repaint();
+                    this.revalidate();
                 }
-
+            }
+        } else {
+            valider.setEnabled(false);
+            renouvelleJoueur();
+            message.setText("Partie finis ");
+            this.repaint();
+            this.revalidate();
         }
     }
 

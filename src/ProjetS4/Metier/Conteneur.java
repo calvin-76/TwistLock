@@ -6,7 +6,6 @@ public class Conteneur {
     private int valeur;
     private int idJoueur;
     private Coin[] coins;
-    private int IDappartenir;
     private Controleur ctrl;
 
     public Conteneur(Controleur ctrl, int valeur){
@@ -17,10 +16,6 @@ public class Conteneur {
 
     public void setCoin(Coin coin, int id){
         this.coins[id-1] = coin;
-    }
-
-    public int getIDAppartenir(){
-        return this.IDappartenir;
     }
 
     public int getAppartenir(){

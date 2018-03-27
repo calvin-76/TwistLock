@@ -28,16 +28,20 @@ public class Joueur {
         return this.nbTl;
     }
 
-    public void recupererPoint(){
+    private void recupererPoint(int id){
+        point = 0;
         for(int lig = 0; lig < ctrl.getLignes(); lig++) {
             for (int col = 0; col < ctrl.getColonnes(); col++) {
-                if(ctrl.getTablier()[lig][col].getIDAppartenir() == id )
+                if(ctrl.getTablier()[lig][col].getAppartenir() == id ) {
                     point += ctrl.getTablier()[lig][col].getValeur();
+                    System.out.println("lig : " + lig + "  col: " + col + "   " + id + "   "+ ctrl.getTablier()[lig][col].getAppartenir() +" Oui");
+                }
             }
         }
     }
 
-    public int getPoint() {
+    public int getPoint(int id) {
+        recupererPoint(id);
         return point;
     }
 
@@ -51,9 +55,5 @@ public class Joueur {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

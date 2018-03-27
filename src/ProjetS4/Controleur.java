@@ -56,9 +56,42 @@ public class Controleur {
         }
     }
 
+    public boolean partieFinis() {
+        for(int i=0; i<listJoueur.size();i++) {
+            if (listJoueur.get(i).getNbPion() > 0) return false;
+        }
+        return true;
+    }
+
+    public String estGagnant() {
+        String message = "";
+        if(partieFinis()){
+            int scoreGagnant = 0;
+            String couleurGagnant = "";
+            for(int i=0; i<listJoueur.size();i++) {
+                if (scoreGagnant < listJoueur.get(i).getPoint(i)) {
+                    scoreGagnant =  listJoueur.get(i).getPoint(i);
+                    couleurGagnant =  listJoueur.get(i).getCouleur();
+                }
+            }
+            message = couleurGagnant + " a gagne la partie avec " + scoreGagnant + " points";
+            return  message;
+        }
+        return  message;
+    }
+
     public void passerTour() {
-        if(num_joueur == listJoueur.size() ) num_joueur = 1;
+        if (num_joueur >= listJoueur.size())
+            num_joueur = 1;
         else num_joueur++;
+
+        if (listJoueur.get(num_joueur-1).getNbPion() <= 0) {
+            num_joueur++;
+            if (num_joueur >= listJoueur.size())
+                num_joueur = 1;
+            if (listJoueur.get(num_joueur-1).getNbPion() <= 0)
+                num_joueur++;
+        }
     }
 
     public Conteneur[][] getTablier() {
@@ -86,6 +119,6 @@ public class Controleur {
     }
 
     public static void main(String[] args){
-        new Controleur(2);
+        new Controleur(4);
     }
 }
