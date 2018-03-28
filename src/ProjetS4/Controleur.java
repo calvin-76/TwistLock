@@ -12,22 +12,20 @@ public class Controleur {
 
     private ArrayList<Joueur> listJoueur;
     private Conteneur[][] tablier;
+    private int nbJoueurs = 2;
 
     private int lignes;
     private int colonnes;
 
-    private Controleur(int nbJoueur){
+    public Controleur(int nbJoueur){
         this.listJoueur = new ArrayList<>();
-        creerListJoueur(nbJoueur);
         creerListConteneur();
-
-        new IHM(this);
+        this.nbJoueurs = nbJoueurs;
     }
 
-    private void creerListJoueur(int nb){
-        for(int i=1; i<= nb; i++){
-            this.listJoueur.add(new Joueur(this,i));
-        }
+    public void ajouterJoueur(Joueur joueur){
+        if(listJoueur.size() < 2)
+            this.listJoueur.add(joueur);
     }
 
     private void creerListConteneur(){
@@ -61,24 +59,6 @@ public class Controleur {
         }
         return true;
     }
-
-    /*
-    public String estGagnant() {
-    String message = "";
-    if(partieFinis()){
-    int scoreGagnant = 0;
-    String couleurGagnant = "";
-    for(int i=0; i<listJoueur.size();i++) {
-    if (scoreGagnant < listJoueur.get(i).getPoint(i)) {
-    scoreGagnant =  listJoueur.get(i).getPoint(i);
-    couleurGagnant =  listJoueur.get(i).getCouleur();
-}
-}
-message = couleurGagnant + " a gagne la partie avec " + scoreGagnant + " points";
-return  message;
-}
-return  message;
-}*/
 
     public void passerTour() {
         if (num_joueur >= listJoueur.size())

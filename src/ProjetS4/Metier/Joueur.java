@@ -2,15 +2,27 @@ package ProjetS4.Metier;
 
 import ProjetS4.Controleur;
 
+import java.net.InetAddress;
+
 public class Joueur {
     private int nbTl = 5;
     private int point = 0;
     private int id;
     private Controleur ctrl;
     String couleur;
+    private InetAddress adresse;
+    private int port;
 
-    public Joueur(Controleur ctrl, int id){
-        this.ctrl = ctrl;
+    public Joueur(int id){
+        switch (id){
+            case 1: this.couleur = "Rouge"; break;
+            case 2: this.couleur = "Vert"; break;
+            case 3: this.couleur = "Bleu";  break;
+            case 4: this.couleur = "Jaune"; break;
+        }
+    }
+
+    public Joueur( int id,InetAddress adresse, int port){
         this.id = id;
         switch (id){
             case 1: this.couleur = "Rouge"; break;
@@ -18,6 +30,8 @@ public class Joueur {
             case 3: this.couleur = "Bleu";  break;
             case 4: this.couleur = "Jaune"; break;
         }
+        this.adresse = adresse;
+        this.port = port;
     }
 
     public String getCouleur(){
@@ -55,5 +69,13 @@ public class Joueur {
 
     public int getId() {
         return this.id;
+    }
+
+    public InetAddress getAdresse() {
+        return adresse;
+    }
+
+    public int getPort() {
+        return port;
     }
 }

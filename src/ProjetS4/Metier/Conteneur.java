@@ -21,7 +21,7 @@ public class Conteneur {
         int joueur4 = 0;
         for(int i = 0; i<4; i++){
 
-            if( coins[i].isVerouille()) {
+            if( coins[i].isVerrouille()) {
                 if (coins[i].getJoueur().getId() == 1) joueur1++;
                 if (coins[i].getJoueur().getId() == 2) joueur2++;
                 if (coins[i].getJoueur().getId() == 3) joueur3++;

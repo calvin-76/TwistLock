@@ -4,7 +4,7 @@ public class Coin {
     private boolean verouille;
     private Joueur joueur;
 
-    public boolean isVerouille(){
+    public boolean isVerrouille(){
         return this.verouille;
     }
 
@@ -23,6 +23,7 @@ public class Coin {
         }
 
     }
+
 
     private void setVerouille(){
         this.verouille = true;
