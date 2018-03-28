@@ -21,14 +21,14 @@ public class Client extends Thread {
         }
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("Nom d'equipe : ");
+        System.out.print("Veuillez saisir un nom d'equipe : ");
         send(sc.next());
     }
 
     private void send(String message) {
         try {
             DatagramPacket dpEnvoi = new DatagramPacket(message.getBytes(),
-                    message.length(), InetAddress.getByName(ip), 19285);
+                    message.length(), InetAddress.getByName(ip), 12345);
             socket.send(dpEnvoi);
         }
         catch(Exception e) {

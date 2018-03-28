@@ -1,6 +1,5 @@
 package ProjetS4;
 
-import ProjetS4.IHM.IHM;
 import ProjetS4.Metier.Coin;
 import ProjetS4.Metier.Conteneur;
 import ProjetS4.Metier.Joueur;
@@ -12,15 +11,34 @@ public class Controleur {
 
     private ArrayList<Joueur> listJoueur;
     private Conteneur[][] tablier;
-    private int nbJoueurs = 2;
+    private String[][] map;
 
     private int lignes;
     private int colonnes;
 
-    public Controleur(int nbJoueur){
+    public Controleur(){
         this.listJoueur = new ArrayList<>();
         creerListConteneur();
-        this.nbJoueurs = nbJoueurs;
+    }
+
+    public Controleur(String map, ArrayList<Joueur> alJoueur) {
+        this.listJoueur = alJoueur;
+
+        String[] tabMap1 = map.replace("MAP=", "").split("\\|");
+        for (String s :
+                tabMap1)
+            System.out.println(s);
+
+        String[][] tabMap2 = new String[tabMap1.length][tabMap1[1].split(":").length];
+
+        for (int i = 0; i < tabMap1.length; i++)
+            tabMap2[i] = tabMap1[i].split(":");
+
+        this.map = tabMap2;
+        System.out.println("this.map.length = " + this.map.length);
+        System.out.println("this.map[0].length = " + this.map[0].length);
+        creerListConteneur(this.map.length, tabMap1[1].split(":").length);
+
     }
 
     public void ajouterJoueur(Joueur joueur){
@@ -45,6 +63,32 @@ public class Controleur {
             for (int col = 0; col < colonnes; col++){
                 Conteneur tmpConteneur = new Conteneur((int)(Math.random()*50+5));
                 tablier[lig][col] = tmpConteneur;
+                tablier[lig][col].setCoin(listCoin[lig][col],1);
+                tablier[lig][col].setCoin(listCoin[lig][col + 1],2);
+                tablier[lig][col].setCoin(listCoin[lig + 1][col+1],3);
+                tablier[lig][col].setCoin(listCoin[lig + 1][col],4);
+            }
+        }
+    }
+
+    private void creerListConteneur(int lignes, int colonnes){
+        this.lignes = lignes;
+        this.colonnes = colonnes;
+
+        Coin[][] listCoin = new Coin[lignes + 1][colonnes + 1];
+
+        for(int lig = 0 ; lig<lignes + 1; lig++) {
+            for (int col = 0; col < colonnes + 1; col++) {
+                listCoin[lig][col] = new Coin();
+            }
+        }
+        this.tablier = new Conteneur[this.lignes][this.colonnes];
+
+        for(int lig = 0 ; lig < this.lignes; lig++){
+            for (int col = 0; col < this.colonnes; col++){
+                System.out.println("lig = " + lig + "\ncol = " + col);
+                System.out.println(this.map[lig][col]);
+                tablier[lig][col] = new Conteneur(Integer.parseInt(this.map[lig][col]));
                 tablier[lig][col].setCoin(listCoin[lig][col],1);
                 tablier[lig][col].setCoin(listCoin[lig][col + 1],2);
                 tablier[lig][col].setCoin(listCoin[lig + 1][col+1],3);
@@ -95,6 +139,6 @@ public class Controleur {
     }
 
     public static void main(String[] args){
-        new Controleur(2);
+        new Controleur();
     }
 }

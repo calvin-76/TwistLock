@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class Serveur extends Thread {
     private DatagramSocket socket;
 
-    private int nbJoueurs;
     private int joueursConnectes = 0;
 
     private int port;
@@ -26,10 +25,9 @@ public class Serveur extends Thread {
 
     private IHM frame;
 
-    public Serveur(int port, int nbJoueurs) {
-        this.partie = new Controleur(nbJoueurs);
+    public Serveur(int port) {
+        this.partie = new Controleur();
         this.port = port;
-        this.nbJoueurs = 2;
     }
 
     public void run() {
@@ -52,14 +50,14 @@ public class Serveur extends Thread {
                     packet.setLength(buffer.length);
 
                     // On instancie le joueur :
-                    Joueur joueur = new Joueur(1, packet.getAddress(), packet.getPort());
+                    Joueur joueur = new Joueur(++joueursConnectes, packet.getAddress(), packet.getPort(), partie);
                     partie.ajouterJoueur(joueur);
 
                     // On souhaite la bienvenue au joueur :
                     StringBuilder identification = new StringBuilder();
-                    identification.append(nbJoueurs + "-Bonjour ");
+                    identification.append(joueursConnectes + "-Bonjour ");
                     identification.append(id);
-                    identification.append("\nVous êtes le joueur " + ++joueursConnectes);
+                    identification.append("\nVous êtes le joueur " + joueursConnectes);
                     identification.append(" (" + joueur.getCouleur() + "), attente suite ...");
                     send(identification.toString(), packet.getAddress(), packet.getPort());
 
@@ -81,12 +79,12 @@ public class Serveur extends Thread {
         boolean stockVide = true;
         boolean allCoinLock = true;
 
-        for (int i = 0; i < this.nbJoueurs; i++) {
+        for (int i = 0; i < 2; i++) {
             if (partie.getListJoueur().get(i).getNbTl() > 0) stockVide = false;
         }
         for (int lig = 0;lig<partie.getTablier().length;lig++) {
             for (int col = 0; col < partie.getTablier()[lig].length; col++) {
-                for (int coin = 0; coin < 4;coin++) {
+                for (int coin = 1; coin <= 4;coin++) {
                     if (!partie.getTablier()[lig][col].getCoin(coin).isVerrouille()) allCoinLock = false;
                 }
             }
@@ -167,7 +165,7 @@ public class Serveur extends Thread {
 
         for (int i = 0; i < tablier.length; i++) {
             for (int j = 0; j < tablier[i].length; j++) {
-                sbMap.append(tablier[i][j]);
+                sbMap.append(tablier[i][j].getValeur());
 
                 if (j != tablier[i].length - 1) sbMap.append(":");
             }
@@ -178,7 +176,7 @@ public class Serveur extends Thread {
         String message = "01-la partie va commencer\n" +
                 sbMap.toString();
         sendData(message);
-        frame = new IHM(this, sbMap.toString(), partie.getListJoueur());
+        frame = new IHM(this, sbMap.toString(), partie.getListJoueur(),partie);
         suiteJeu();
 
     }
@@ -224,7 +222,7 @@ public class Serveur extends Thread {
 
         }
         System.out.println("JoueurActuel : " + joueur.getId());
-        send("10-C'est à vous de jouer [" + joueur.getCouleur().toUpperCase() + "] : ", joueur.getAdresse(), joueur.getPort());
+        send("10-A vous de jouer [" + joueur.getCouleur().toUpperCase() + "] : ", joueur.getAdresse(), joueur.getPort());
 
     }
 
@@ -245,23 +243,26 @@ public class Serveur extends Thread {
         if (!partieFinis()) {
             this.jCourant++;
             suiteJeu();
-
         } else {
-            //ArrayList<Rectangle[]> tabDocks = frame.getTabDocks();
-            this.sendData("88-Partie Terminée,");
-            /*for (Joueur joueur : partie.getJoueurs()) {
-                int somme = 0;
-                for (int cpt = 0; cpt < tabDocks.size(); cpt++) {
-                    for (int cpt2 = 0; cpt2 < tabDocks.get(0).length; cpt2++) {
-                        if (tabDocks.get(cpt)[cpt2].getOwner() != null) {
-                            if (tabDocks.get(cpt)[cpt2].getOwner().equals(joueur))
-                                somme += tabDocks.get(cpt)[cpt2].getValeur();
-                        }
-                    }
+            Conteneur[][] listConteneur = partie.getTablier();
+            int score1 = 0;
+            int score2 = 0;
 
+            for (int i = 0; i < listConteneur.length; i++) {
+                for (int j = 0; j < listConteneur[i].length; j++) {
+                    if (listConteneur[i][j].appartientA() == 1)
+                        score1 += listConteneur[i][j].getValeur();
+                    else if(listConteneur[i][j].appartientA() == 2){
+                        score2 += listConteneur[i][j].getValeur();
+                    }
                 }
-                this.sendData("[" + joueur.getCouleur() + "] :" + somme);
-            }*/
+            }
+            if(score1>score2){
+                this.sendData("88-Partie Terminée, le joueur rouge a gagner"+ score1 + " points");
+            }
+            else{
+                this.sendData("88-Partie Terminée, le joueur vert a gagner avec " + score2 + " points");
+            }
             socket.close();
             System.exit(0);
         }
@@ -274,6 +275,6 @@ public class Serveur extends Thread {
     }
 
     public static void main(String[] args) {
-        new Serveur(19285, 2).start();
+        new Serveur(12345).start();
     }
 }

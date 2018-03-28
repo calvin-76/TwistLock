@@ -8,7 +8,7 @@ public class Joueur {
     private int nbTl = 5;
     private int point = 0;
     private int id;
-    private Controleur ctrl;
+    private Controleur jeu;
     String couleur;
     private InetAddress adresse;
     private int port;
@@ -22,7 +22,7 @@ public class Joueur {
         }
     }
 
-    public Joueur( int id,InetAddress adresse, int port){
+    public Joueur(int id, InetAddress adresse, int port, Controleur jeu){
         this.id = id;
         switch (id){
             case 1: this.couleur = "Rouge"; break;
@@ -32,6 +32,7 @@ public class Joueur {
         }
         this.adresse = adresse;
         this.port = port;
+        this.jeu = jeu;
     }
 
     public String getCouleur(){
@@ -42,22 +43,31 @@ public class Joueur {
         return this.nbTl;
     }
 
-    private void recupererPoint(int id){
+
+    public int getPoint() {
+        recupererPoint();
+        return this.point;
+    }
+
+    public void recupererPoint(){
+        for (int lig = 0; lig < jeu.getLignes(); lig++) {
+            for (int col = 0; col < jeu.getColonnes(); col++) {
+                System.out.println(lig + " : " + col + " appartient a "+ jeu.getTablier()[lig][col].appartientA());
+            }
+        }
+
         point = 0;
-        for(int lig = 0; lig < ctrl.getLignes(); lig++) {
-            for (int col = 0; col < ctrl.getColonnes(); col++) {
-                if(ctrl.getTablier()[lig][col].getAppartenir() == id ) {
-                    point += ctrl.getTablier()[lig][col].getValeur();
-                    System.out.println("lig : " + lig + "  col: " + col + "   " + id + "   "+ ctrl.getTablier()[lig][col].getAppartenir() +" Oui");
+        System.out.println(" : " + jeu.getTablier()[0][0].appartientA());
+        for(int lig = 0; lig < jeu.getLignes(); lig++) {
+            for (int col = 0; col < jeu.getColonnes(); col++) {
+                if(jeu.getTablier()[lig][col].appartientA() == id ) {
+                    point += jeu.getTablier()[lig][col].getValeur();
+                    System.out.println("lig : " + lig + "  col: " + col + "   " + id + "   "+ jeu.getTablier()[lig][col].appartientA() +" Oui");
                 }
             }
         }
     }
 
-    public int getPoint(int id) {
-        recupererPoint(id);
-        return this.point;
-    }
 
     public int getNbTl(){
         return this.nbTl;

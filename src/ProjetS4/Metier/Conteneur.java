@@ -9,11 +9,7 @@ public class Conteneur {
         this.valeur = valeur;
     }
 
-    public void setCoin(Coin coin, int id){
-        this.coins[id-1] = coin;
-    }
-
-    public int getAppartenir(){
+    public int appartientA(){
 
         int joueur1 = 0;
         int joueur2 = 0;
@@ -42,10 +38,18 @@ public class Conteneur {
     }
 
     public Coin getCoin(int id){
-        return  this.coins[id - 1];
+        return this.coins[id - 1];
+    }
+
+    public void setCoin(Coin coin, int id){
+        this.coins[id-1] = coin;
     }
 
     public int getValeur() {
         return this.valeur;
+    }
+
+    public void setValeur(int valeur) {
+        this.valeur = valeur;
     }
 }

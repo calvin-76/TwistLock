@@ -14,28 +14,22 @@ public class IHM extends JFrame {
 
     private int lignes;
     private int colonnes;
-
-    private JTextField tfLigneConteneur;
-    private JTextField tfColonneConteneur;
-    private JTextField tfnumCoin;
-
     ArrayList<PanelJoueur> panelJoueur;
 
-    private JLabel message;
     private JLabel quiJoue;
 
     private JLabel[][] listCoin;
     private JLabel[][] listConteneur;
-    private Controleur jeu;
+    private Controleur partie;
     private Serveur server;
 
-    public IHM(Serveur server, String map, ArrayList<Joueur> listJoueur){
+    public IHM(Serveur server, String map, ArrayList<Joueur> listJoueur, Controleur partie){
+        this.partie = partie;
         this.server = server;
-        lignes = jeu.getLignes() * 2 + 1;
-        colonnes = jeu.getColonnes() * 2 + 1;
-
-        listCoin = new JLabel[jeu.getLignes() + 1][jeu.getColonnes() + 1];
-        listConteneur = new JLabel[jeu.getLignes()][jeu.getColonnes()];
+        this.lignes = this.partie.getLignes() * 2 + 1;
+        this.colonnes = this.partie.getColonnes() * 2 + 1;
+        this.listCoin = new JLabel[this.partie.getLignes() + 1][this.partie.getColonnes() + 1];
+        this.listConteneur = new JLabel[this.partie.getLignes()][this.partie.getColonnes()];
 
         setLocation(0,0);
         setTitle("Twist Lock");
@@ -43,7 +37,6 @@ public class IHM extends JFrame {
         JPanel panelGlobal = new JPanel(new BorderLayout());
         JPanel panelNord = new JPanel(new BorderLayout());
         JPanel panelGauche = new JPanel(new BorderLayout());
-        JPanel panelBas = new JPanel(new BorderLayout());
 
         JPanel panelTable = new JPanel(new GridLayout(this.lignes, this.colonnes));
 
@@ -61,7 +54,7 @@ public class IHM extends JFrame {
                     tmpPanel.setBackground(Color.WHITE);
                     panelTable.add(tmpPanel);
                 }else if(lig % 2 == 1 && col % 2 == 1){
-                    tmpLabel = new JLabel("" + jeu.getTablier()[lig / 2][col / 2].getValeur(),SwingConstants.CENTER);
+                    tmpLabel = new JLabel("" + this.partie.getTablier()[lig / 2][col / 2].getValeur(),SwingConstants.CENTER);
                     listConteneur[lig / 2 ][col / 2] = tmpLabel;
                     tmpPanel = new JPanel(new BorderLayout());
                     tmpPanel.setBackground(Color.WHITE);
@@ -85,54 +78,18 @@ public class IHM extends JFrame {
             }
         }
 
-
-        /*--------------panel bas-----------------*/
-        JPanel panelLigneConteneur = new JPanel();
-        JPanel panelColonneConteneur = new JPanel();
-        JPanel panelCoin = new JPanel();
-
-        JLabel labelLigneConteneur = new JLabel("Ligne : ");
-        JLabel labelColoneConteneur = new JLabel("Colonne : ");
-        JLabel labelnumCoin = new JLabel("Coin : ");
-
-        tfLigneConteneur = new JTextField(4);
-        tfColonneConteneur = new JTextField(4);
-        tfnumCoin = new JTextField(4);
-
-        panelLigneConteneur.add(labelLigneConteneur);
-        panelLigneConteneur.add(tfLigneConteneur);
-
-        panelColonneConteneur.add(labelColoneConteneur);
-        panelColonneConteneur.add(tfColonneConteneur);
-
-        panelCoin.add(labelnumCoin);
-        panelCoin.add(tfnumCoin);
-
-        JPanel panelColoneLigne = new JPanel();
-        panelColoneLigne.add(panelLigneConteneur);
-        panelColoneLigne.add(panelColonneConteneur);
-        panelColoneLigne.add(panelCoin);
-
-        message = new JLabel(" ",SwingConstants.CENTER);
-
-        JPanel panelMessageColonneLigne = new JPanel(new BorderLayout());
-        panelMessageColonneLigne.add(message,BorderLayout.NORTH);
-        panelMessageColonneLigne.add(panelColoneLigne);
-
         /*------------------------------------------------------------*/
-
         /*--------------------  Panel droit  ------------------------*/
         panelJoueur = new ArrayList<>();
 
-        JPanel panelDroit = new JPanel(new GridLayout(jeu.getListJoueur().size(),1));
-        for(int i = 1; i <= jeu.getListJoueur().size(); i++) {
-            panelJoueur.add(new PanelJoueur(jeu, i));
+        JPanel panelDroit = new JPanel(new GridLayout(this.partie.getListJoueur().size(),1));
+        for(int i = 1; i <= this.partie.getListJoueur().size(); i++) {
+            panelJoueur.add(new PanelJoueur(this.partie, i));
             panelDroit.add(panelJoueur.get(i-1));
         }
         /*-----------------------------------------------------------*/
-        quiJoue = new JLabel("C'est au joueur " + jeu.getListJoueur().get(jeu.getNum_joueur() - 1).getCouleur() + " de jouer !");
+        quiJoue = new JLabel("C'est au joueur " + this.partie.getListJoueur().get(this.partie.getNum_joueur() - 1).getCouleur() + " de jouer !");
         panelNord.add(quiJoue);
-        panelBas.add(panelMessageColonneLigne);
 
         JPanel paneltmpFlow = new JPanel();
         paneltmpFlow.add(panelTable);
@@ -140,7 +97,6 @@ public class IHM extends JFrame {
         JScrollPane panelTablePane = new JScrollPane(paneltmpFlow);
 
         panelGlobal.add(panelTablePane,BorderLayout.CENTER);
-        panelGlobal.add(panelBas,BorderLayout.SOUTH);
         panelGlobal.add(panelNord,BorderLayout.NORTH);
         panelGlobal.add(panelGauche,BorderLayout.WEST);
         panelGlobal.add(panelDroit,BorderLayout.EAST);
@@ -166,77 +122,18 @@ public class IHM extends JFrame {
         return imageCharge;
     }
 
-    /*public void actionPerformed(ActionEvent e) {
-        if(!jeu.partieFinis()) {
-            message.setText("");
-
-            if(tfColonneConteneur != null && tfLigneConteneur != null && tfnumCoin != null){
-                int joueurCourant = jeu.getNum_joueur() - 1;
-
-                if (jeu.getListJoueur().get(joueurCourant).getNbTl() > 0) {
-                    int ligne = Integer.parseInt(tfLigneConteneur.getText())-1;
-                    int colonne = (tfColonneConteneur.getText().charAt(0))-65;
-                    int numCoin = Integer.parseInt(tfnumCoin.getText());
-
-                    jeu.getListJoueur().get(joueurCourant).retirerTl();
-
-                    if(ligne+1<1 || colonne+1<1 || ligne+1 > jeu.getTablier().length || colonne+1 > jeu.getTablier()[0].length || numCoin > 4 || numCoin < 1){
-                        jeu.getListJoueur().get(joueurCourant).retirerTl();
-                        message.setText("Coordonnées incorrect. Vous avez perdu un TL.");
-                    }else{
-                        if (!jeu.getTablier()[ligne][colonne].getCoin(numCoin).isVerrouille()) {
-                            jeu.getTablier()[ligne][colonne].getCoin(numCoin).setJoueur(jeu.getListJoueur().get(joueurCourant));
-
-                            String img = "./img/coin" + jeu.getListJoueur().get(joueurCourant).getCouleur() + ".png";
-
-                            switch (numCoin) {
-                                case 1:
-                                    listCoin[ligne][colonne].setIcon(getImage(img, 80, 55));
-                                    break;
-                                case 2:
-                                    listCoin[ligne][colonne + 1].setIcon(getImage(img, 80, 55));
-                                    break;
-                                case 3:
-                                    listCoin[ligne + 1][colonne + 1].setIcon(getImage(img, 80, 55));
-                                    break;
-                                case 4:
-                                    listCoin[ligne + 1][colonne].setIcon(getImage(img, 80, 55));
-                                    break;
-                            }
-                        } else {
-                            jeu.getListJoueur().get(joueurCourant).retirerTl();
-                            message.setText("Coin déja verouillé. Vous avez perdu un TL.");
-                        }
-                        setAppartientConteneur();
-                    }
-                    jeu.passerTour();
-                    renouvelleJoueur();
-                    quiJoue.setText("C'est au joueur " + jeu.getListJoueur().get(jeu.getNum_joueur()-1).getCouleur() + " de jouer !");
-                    this.repaint();
-                    this.revalidate();
-                }
-            }
-        } else {
-            valider.setEnabled(false);
-            renouvelleJoueur();
-            message.setText("Partie terminée !");
-            this.repaint();
-            this.revalidate();
-        }
-    }*/
-
     public void jouer(int ligne, int colonne, int numCoin) {
-        if(!jeu.partieFinis()) {
-            int joueurCourant = jeu.getNum_joueur() - 1;
+        if(!partie.partieFinis()) {
+            int joueurCourant = partie.getNum_joueur() - 1;
 
-            if (jeu.getListJoueur().get(joueurCourant).getNbTl() > 0) {
+            if (partie.getListJoueur().get(joueurCourant).getNbTl() > 0) {
 
-                jeu.getListJoueur().get(joueurCourant).retirerTl();
+                System.out.println(numCoin);
 
-                if (!jeu.getTablier()[ligne][colonne].getCoin(numCoin).isVerrouille()) {
-                    jeu.getTablier()[ligne][colonne].getCoin(numCoin).setJoueur(jeu.getListJoueur().get(joueurCourant));
+                if (!partie.getTablier()[ligne][colonne].getCoin(numCoin).isVerrouille()) {
+                    partie.getTablier()[ligne][colonne].getCoin(numCoin).setJoueur(partie.getListJoueur().get(joueurCourant));
 
-                    String img = "./img/coin" + jeu.getListJoueur().get(joueurCourant).getCouleur() + ".png";
+                    String img = "./img/coin" + partie.getListJoueur().get(joueurCourant).getCouleur() + ".png";
 
                     switch (numCoin) {
                         case 1:
@@ -253,13 +150,13 @@ public class IHM extends JFrame {
                             break;
                     }
                 } else {
-                    jeu.getListJoueur().get(joueurCourant).retirerTl();
-                    server.send("21-Coup joué illégal", jeu.getListJoueur().get(server.getJCourant()).getAdresse(), jeu.getListJoueur().get(server.getJCourant()).getPort());
-                    server.sendBroadcast("22-Coup adversaire illégal [" + jeu.getListJoueur().get(server.getJCourant()).getCouleur().toUpperCase() + "]");
+                    partie.getListJoueur().get(joueurCourant).retirerTl();
+                    server.send("21-Coup joué illégal", partie.getListJoueur().get(server.getJCourant()).getAdresse(), partie.getListJoueur().get(server.getJCourant()).getPort());
+                    server.sendBroadcast("22-Coup adversaire illégal [" + partie.getListJoueur().get(server.getJCourant()).getCouleur().toUpperCase() + "]");
                 }
                 setAppartientConteneur();
 
-                jeu.passerTour();
+                partie.passerTour();
                 renouvelleJoueur();
                 this.repaint();
                 this.revalidate();
@@ -270,15 +167,15 @@ public class IHM extends JFrame {
     }
 
     public void renouvelleJoueur() {
-        for (int i = 1; i <= jeu.getListJoueur().size(); i++) {
+        for (int i = 1; i <= partie.getListJoueur().size(); i++) {
             panelJoueur.get(i - 1).renouvelle();
         }
     }
 
     private void setAppartientConteneur() {
-        for (int lig = 0; lig < jeu.getLignes(); lig++) {
-            for (int col = 0; col < jeu.getColonnes(); col++) {
-                switch (jeu.getTablier()[lig][col].getAppartenir()) {
+        for (int lig = 0; lig < partie.getLignes(); lig++) {
+            for (int col = 0; col < partie.getColonnes(); col++) {
+                switch (partie.getTablier()[lig][col].appartientA()) {
                     case 0 :
                         listConteneur[lig][col].setBackground(Color.white);
                         listConteneur[lig][col].setOpaque(false);
