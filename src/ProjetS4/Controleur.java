@@ -25,18 +25,12 @@ public class Controleur {
         this.listJoueur = alJoueur;
 
         String[] tabMap1 = map.replace("MAP=", "").split("\\|");
-        for (String s :
-                tabMap1)
-            System.out.println(s);
-
         String[][] tabMap2 = new String[tabMap1.length][tabMap1[1].split(":").length];
 
         for (int i = 0; i < tabMap1.length; i++)
             tabMap2[i] = tabMap1[i].split(":");
 
         this.map = tabMap2;
-        System.out.println("this.map.length = " + this.map.length);
-        System.out.println("this.map[0].length = " + this.map[0].length);
         creerListConteneur(this.map.length, tabMap1[1].split(":").length);
 
     }
@@ -86,8 +80,6 @@ public class Controleur {
 
         for(int lig = 0 ; lig < this.lignes; lig++){
             for (int col = 0; col < this.colonnes; col++){
-                System.out.println("lig = " + lig + "\ncol = " + col);
-                System.out.println(this.map[lig][col]);
                 tablier[lig][col] = new Conteneur(Integer.parseInt(this.map[lig][col]));
                 tablier[lig][col].setCoin(listCoin[lig][col],1);
                 tablier[lig][col].setCoin(listCoin[lig][col + 1],2);

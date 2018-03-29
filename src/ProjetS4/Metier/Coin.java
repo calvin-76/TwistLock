@@ -24,7 +24,6 @@ public class Coin {
 
     }
 
-
     private void setVerouille(){
         this.verouille = true;
     }

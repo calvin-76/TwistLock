@@ -1,19 +1,20 @@
 package ProjetS4.Reseau;
 
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
-public class ClientThread extends Thread{
+public class BotThread extends Thread{
 
-    Client client;
+    Bot bot;
     DatagramSocket socket;
 
-    public ClientThread(Client client, DatagramSocket socket) {
-        this.client = client;
+    public BotThread(Bot bot, DatagramSocket socket) {
+        this.bot = bot;
         this.socket = socket;
     }
 
     public void run() {
-        while(this.client.estEnCour()) {
+        while(this.bot.estEnCour()) {
             try {
                 DatagramPacket dp = new DatagramPacket(new byte[64000], 64000);
                 socket.receive(dp);

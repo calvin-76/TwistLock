@@ -258,7 +258,7 @@ public class Serveur extends Thread {
                 }
             }
             if(score1>score2){
-                this.sendData("88-Partie Terminée, le joueur rouge a gagner"+ score1 + " points");
+                this.sendData("88-Partie Terminée, le joueur rouge a gagner avec " + score1 + " points");
             }
             else{
                 this.sendData("88-Partie Terminée, le joueur vert a gagner avec " + score2 + " points");
