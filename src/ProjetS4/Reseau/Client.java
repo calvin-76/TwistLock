@@ -28,7 +28,7 @@ public class Client extends Thread {
     private void send(String message) {
         try {
             DatagramPacket dpEnvoi = new DatagramPacket(message.getBytes(),
-                    message.length(), InetAddress.getByName(ip), 12345);
+                    message.length(), InetAddress.getByName(ip), 8000);
             socket.send(dpEnvoi);
         }
         catch(Exception e) {

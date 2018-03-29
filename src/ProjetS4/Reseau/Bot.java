@@ -22,8 +22,6 @@ public class Bot extends Thread {
         try{
             this.ip = ip;
             socket = new DatagramSocket();
-            BotThread botThread = new BotThread(this, socket);
-            botThread.start();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -89,32 +87,75 @@ public class Bot extends Thread {
 
     public void run() {
         while(partieEnCour) {
-			String sJouer = "";
+	        String sJouer = "";
 	        DatagramPacket dpRecevoir = new DatagramPacket(new byte[64000], 64000);
 	        try {
 		        while (!sJouer.startsWith("10-")) {
 			        socket.receive(dpRecevoir);
 			        System.out.println(new String(dpRecevoir.getData()));
 					sJouer = new String(dpRecevoir.getData());
+					if (sJouer.startsWith("20")){
+						int lig =  Integer.parseInt("" + sJouer.split(":")[2].charAt(0)) - 1;
+						int col =  Integer.parseInt("" +(sJouer.split(":")[2].charAt(1) - 65));
+						int coin = Integer.parseInt("" + sJouer.split(":")[2].charAt(2));
+						System.out.println("lig = " + lig);
+						System.out.println("col = " + col);
+						System.out.println("coin = " + coin);
+						this.map[lig][col].getCoin(coin).setVerouille();
+					}
 		        }
-
 		        int resMax = 0;
-		        int coinMax;
-		        ArrayList<Coin> coinsBannis = new ArrayList<Coin>();
-		        for (int i = 0; i < this.map.length; i+=2) {
-			        for (int j = 0; j < this.map[0].length; j++) {
-				        for (int k = 1; k <= 4; k++) {
+		        Coin coinMax = this.listCoin[0][0];
+		        int iSave = 0;
+		        int jSave = 0;
+		        for (int i = 0; i < this.listCoin.length; i++) { // On parcours les lignes du tableau de coin
+			        for (int j = 0; j < this.listCoin[0].length; j++) { // On parcours chaque coin de chaque ligne du tableau de coin
+				        int res = 0;
+						if (!this.listCoin[i][j].isVerrouille()) { // Si le coin est libre, on le prend en compte, sinon on l'ignore
 
-				        }
+							for (Conteneur cont : this.listCoin[i][j].getConteneurs()) {
+								// On regarde le nombre de coins qui ne sont pas libres autour du conteneur en question
+								int nbCoinsPris = 0;
+								for (int z = 1; z <= 4; z++)
+									if (cont.getCoin(z).getJoueur() != null)
+										nbCoinsPris++;
+
+								if (!cont.isPossede() || nbCoinsPris <= 1)
+									res += cont.getValeur();
+							}
+
+							// On vérifie si la somme des valeurs des conteneurs autour du coin en question
+							if (res > resMax) {
+								resMax = res;
+								coinMax = this.listCoin[i][j];
+								iSave = i;
+								jSave = j;
+							}
+						}
 			        }
 		        }
-				        
-			        
-		        
+				String sSend = "";
+		        if (iSave < this.map.length) sSend += (iSave+1);
+		        else sSend += iSave;
+		        if (jSave < this.map[0].length) sSend += (char) (jSave+65);
+		        else sSend += (char) jSave+64;
+
+		        int coin = 1;
+				if (iSave >= this.map.length ) coin = 4;
+				if (jSave >= this.map[0].length    ) coin = 2;
+				if (iSave >= this.map.length &&
+					jSave >= this.map[0].length    ) coin = 3;
+
+				sSend += coin;
+				coinMax.setVerouille();
+		        System.out.println(sSend);
+
+				send(sSend);
 	        }
-	        catch (Exception e) {}
+	        catch (Exception e) {e.printStackTrace();}
         }
         socket.close();
+	    System.out.println("Lul je suis sorti de la boucle");
     }
 
     public boolean estEnCour() { return this.partieEnCour;}

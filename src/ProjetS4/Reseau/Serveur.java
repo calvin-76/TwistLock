@@ -41,7 +41,6 @@ public class Serveur extends Thread {
 
                     socket.receive(packet);
 
-                    // On reçoit le nom du joueur
                     String id = new String(packet.getData());
 
                     System.out.println("Message reçu : " + id + " de " +
@@ -49,11 +48,9 @@ public class Serveur extends Thread {
 
                     packet.setLength(buffer.length);
 
-                    // On instancie le joueur :
                     Joueur joueur = new Joueur(++joueursConnectes, packet.getAddress(), packet.getPort(), partie);
                     partie.ajouterJoueur(joueur);
 
-                    // On souhaite la bienvenue au joueur :
                     StringBuilder identification = new StringBuilder();
                     identification.append(joueursConnectes + "-Bonjour ");
                     identification.append(id);
@@ -266,8 +263,6 @@ public class Serveur extends Thread {
             socket.close();
             System.exit(0);
         }
-
-
     }
 
     public void repaint() {
